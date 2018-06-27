@@ -16,7 +16,10 @@ class LZ4Conan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
-            
+
+    def configure(self):
+        del self.settings.compiler.libcxx
+
     def source(self):
         archive_name = "{0}-{1}".format(self.name, self.version)
         source_url = "https://github.com/lz4/lz4"
