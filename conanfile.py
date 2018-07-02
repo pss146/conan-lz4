@@ -14,11 +14,13 @@ class LZ4Conan(ConanFile):
     exports = ["LICENSE.md"]
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = "shared=False", "fPIC=True"
 
     def configure(self):
         del self.settings.compiler.libcxx
+        if self.settings.compiler == 'Visual Studio':
+            del self.options.fPIC
 
     def source(self):
         archive_name = "{0}-{1}".format(self.name, self.version)
@@ -30,6 +32,8 @@ class LZ4Conan(ConanFile):
         install_dir = os.path.abspath('lz4-install')
         with tools.chdir(self.source_subfolder):
             env_build = AutoToolsBuildEnvironment(self)
+            if self.settings.compiler != 'Visual Studio':
+                env_build.fpic = self.options.fPIC
             with tools.environment_append(env_build.vars):
                 self.run("make")
                 self.run("make DESTDIR=%s install" % install_dir)
