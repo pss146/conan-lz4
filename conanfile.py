@@ -7,7 +7,7 @@ import os
 
 class LZ4Conan(ConanFile):
     name = "lz4"
-    version = "1.8.0"
+    version = "1.8.2"
     description = "Extremely Fast Compression algorithm"
     license = "BSD 2-Clause, BSD 3-Clause"
     url = "https://github.com/bincrafters/conan-lz4"
