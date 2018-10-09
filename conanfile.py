@@ -7,10 +7,11 @@ import os
 
 class LZ4Conan(ConanFile):
     name = "lz4"
-    version = "1.8.2"
+    version = "1.8.3"
     description = "Extremely Fast Compression algorithm"
     license = "BSD 2-Clause, BSD 3-Clause"
     url = "https://github.com/bincrafters/conan-lz4"
+    author = "Bincrafters <bincrafters@gmail.com>"
     exports = ["LICENSE.md"]
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
