@@ -53,6 +53,8 @@ class LZ4Conan(ConanFile):
                         self.run('install_name_tool -change %s %s %s' % (old, new, os.path.join(lib_dir, lib)))
 
     def build_vs(self):
+        shutil.copy(os.path.join(self.source_subfolder, "lib", "lz4.h"),
+                    os.path.join(self.source_subfolder, "visual", "VS2010", "liblz4-dll", "lz4.h"))
         with tools.chdir(os.path.join(self.source_subfolder, 'visual', 'VS2010')):
             target = 'liblz4-dll' if self.options.shared else 'liblz4'
 
