@@ -28,7 +28,7 @@ class LZ4Conan(ConanFile):
 
     @property
     def _is_mingw_windows(self):
-        return self.settings.os_build == "Windows" and self.settings.compiler == "gcc" and os.name == "nt"
+        return self.settings.os == "Windows" and self.settings.compiler == "gcc" and os.name == "nt"
 
     def build_requirements(self):
         if self._is_mingw_windows:
