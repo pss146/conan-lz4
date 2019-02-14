@@ -26,6 +26,14 @@ class LZ4Conan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
+    @property
+    def _is_mingw_windows(self):
+        return self.settings.os_build == "Windows" and self.settings.compiler == "gcc" and os.name == "nt"
+
+    def build_requirements(self):
+        if self._is_mingw_windows:
+            self.build_requires("msys2_installer/latest@bincrafters/stable")
+
     def source(self):
         archive_name = "{0}-{1}".format(self.name, self.version)
         source_url = "https://github.com/lz4/lz4"
