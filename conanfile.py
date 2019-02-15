@@ -50,7 +50,7 @@ class LZ4Conan(ConanFile):
             else:
                 args = ["BUILD_SHARED=no", "BUILD_STATIC=yes"]
             env_build.make(args=args)
-            env_build.make(args=["DESTDIR=%s" % prefix, "install"])
+            env_build.make(args=["PREFIX=%s" % prefix, "install"])
 
             if self.settings.os == 'Macos' and self.options.shared:
                 lib_dir = os.path.join(prefix, 'usr', 'local', 'lib')
@@ -73,7 +73,7 @@ class LZ4Conan(ConanFile):
 
             msbuild = MSBuild(self)
             msbuild.build(project_file="lz4.sln", targets=[target], platforms={'x86': 'Win32'})
-         
+
     def build(self):
         if self.settings.compiler == "Visual Studio":
             self.build_vs()
