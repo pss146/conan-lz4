@@ -53,7 +53,7 @@ class LZ4Conan(ConanFile):
             env_build.make(args=["PREFIX=%s" % prefix, "install"])
 
             if self.settings.os == 'Macos' and self.options.shared:
-                lib_dir = os.path.join(prefix, 'usr', 'local', 'lib')
+                lib_dir = os.path.join(prefix, 'lib')
                 old = '/usr/local/lib/liblz4.1.dylib'
                 new = 'liblz4.1.dylib'
                 for lib in os.listdir(lib_dir):
