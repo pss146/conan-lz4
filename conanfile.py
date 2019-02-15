@@ -64,10 +64,10 @@ class LZ4Conan(ConanFile):
         shutil.copy(os.path.join(self.source_subfolder, "lib", "lz4.h"),
                     os.path.join(self.source_subfolder, "visual", "VS2010", "liblz4-dll", "lz4.h"))
         # Unable to load plug-in localespc.dll
-        tools.replace_in_file(os.path.join(self.source_subfolder, "visual", "VS2010", "liblz4", "liblz4.vcxproj"),
-                              "<RunCodeAnalysis>true</RunCodeAnalysis>", "")
-        tools.replace_in_file(os.path.join(self.source_subfolder, "visual", "VS2010", "liblz4-dll", "liblz4-dll.vcxproj"),
-                              "<RunCodeAnalysis>true</RunCodeAnalysis>", "")
+        for project in ["lz4", "liblz4", "liblz4-dll"]:
+            project_name = os.path.join(self.source_subfolder, "visual", "VS2010", project, "%s.vcxproj" % project)
+            tools.replace_in_file(project_name, "<RunCodeAnalysis>true</RunCodeAnalysis>", "")
+            tools.replace_in_file(project_name, "<TreatWarningAsError>true</TreatWarningAsError>", "")
         with tools.chdir(os.path.join(self.source_subfolder, 'visual', 'VS2010')):
             target = 'liblz4-dll' if self.options.shared else 'liblz4'
 
