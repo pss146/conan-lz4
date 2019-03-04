@@ -50,7 +50,8 @@ class LZ4Conan(ConanFile):
             else:
                 args = ["BUILD_SHARED=no", "BUILD_STATIC=yes"]
             env_build.make(args=args)
-            env_build.make(args=["PREFIX=%s" % prefix, "install"])
+            args.extend(["PREFIX=%s" % prefix, "install"])
+            env_build.make(args=args)
 
             if self.settings.os == 'Macos' and self.options.shared:
                 lib_dir = os.path.join(prefix, 'lib')
