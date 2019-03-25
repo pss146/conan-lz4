@@ -42,7 +42,7 @@ class LZ4Conan(ConanFile):
         tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256=sha256)
         os.rename(archive_name, self._source_subfolder)
 
-    def build_make(self):
+    def _build_make(self):
         prefix = self.package_folder
         prefix = tools.unix_path(prefix) if self.settings.os == "Windows" else prefix
         with tools.chdir(self._source_subfolder):
@@ -63,7 +63,7 @@ class LZ4Conan(ConanFile):
                     if lib.endswith('.dylib'):
                         self.run('install_name_tool -change %s %s %s' % (old, new, os.path.join(lib_dir, lib)))
 
-    def build_vs(self):
+    def _build_vs(self):
         shutil.copy(os.path.join(self._source_subfolder, "lib", "lz4.h"),
                     os.path.join(self._source_subfolder, "visual", "VS2010", "liblz4-dll", "lz4.h"))
         # Unable to load plug-in localespc.dll
@@ -79,9 +79,9 @@ class LZ4Conan(ConanFile):
 
     def build(self):
         if self.settings.compiler == "Visual Studio":
-            self.build_vs()
+            self._build_vs()
         else:
-            self.build_make()
+            self._build_make()
 
     def package(self):
         self.copy(pattern="LICENSE", dst="license", src=self._source_subfolder)
