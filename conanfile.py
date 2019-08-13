@@ -8,12 +8,12 @@ import shutil
 
 class LZ4Conan(ConanFile):
     name = "lz4"
-    version = "1.8.3"
+    version = "1.9.1"
     description = "Extremely Fast Compression algorithm"
     license = ("BSD-2-Clause", "BSD-3-Clause")
-    url = "https://github.com/bincrafters/conan-lz4"
+    url = "https://github.com/pss146/conan-lz4"
     homepage = "https://github.com/lz4/lz4"
-    author = "Bincrafters <bincrafters@gmail.com>"
+    author = "Stanislav Perepelitsyn <stas.perepel@gmail.com>"
     topics = ("conan", "lz4", "compression")
     exports = ["LICENSE.md"]
     _source_subfolder = "source_subfolder"
@@ -37,7 +37,7 @@ class LZ4Conan(ConanFile):
             self.build_requires("msys2_installer/latest@bincrafters/stable")
 
     def source(self):
-        sha256 = "33af5936ac06536805f9745e0b6d61da606a1f8b4cc5c04dd3cbaca3b9b4fc43"
+        sha256 = "f8377c89dad5c9f266edc0be9b73595296ecafd5bfa1000de148096c50052dc4"
         archive_name = "{0}-{1}".format(self.name, self.version)
         tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256=sha256)
         os.rename(archive_name, self._source_subfolder)
@@ -65,17 +65,17 @@ class LZ4Conan(ConanFile):
 
     def _build_vs(self):
         shutil.copy(os.path.join(self._source_subfolder, "lib", "lz4.h"),
-                    os.path.join(self._source_subfolder, "visual", "VS2010", "liblz4-dll", "lz4.h"))
+                    os.path.join(self._source_subfolder, "visual", "VS2017", "liblz4-dll", "lz4.h"))
         # Unable to load plug-in localespc.dll
-        for project in ["lz4", "liblz4", "liblz4-dll"]:
-            project_name = os.path.join(self._source_subfolder, "visual", "VS2010", project, "%s.vcxproj" % project)
+        for project in ["liblz4", "liblz4-dll"]:
+            project_name = os.path.join(self._source_subfolder, "visual", "VS2017", project, "%s.vcxproj" % project)
             tools.replace_in_file(project_name, "<RunCodeAnalysis>true</RunCodeAnalysis>", "")
             tools.replace_in_file(project_name, "<TreatWarningAsError>true</TreatWarningAsError>", "")
-        with tools.chdir(os.path.join(self._source_subfolder, 'visual', 'VS2010')):
+        with tools.chdir(os.path.join(self._source_subfolder, 'visual', 'VS2017')):
             target = 'liblz4-dll' if self.options.shared else 'liblz4'
 
             msbuild = MSBuild(self)
-            msbuild.build(project_file="lz4.sln", targets=[target], platforms={'x86': 'Win32'})
+            msbuild.build(project_file="lz4.sln", targets=[target], upgrade_project=False, platforms={'x86': 'Win32'})
 
     def build(self):
         if self.settings.compiler == "Visual Studio":
@@ -89,7 +89,7 @@ class LZ4Conan(ConanFile):
             include_dir = os.path.join(self._source_subfolder, 'lib')
             self.copy(pattern="lz4*.h", dst="include", src=include_dir, keep_path=False)
             arch = 'Win32' if self.settings.arch == 'x86' else 'x64'
-            bin_dir = os.path.join(self._source_subfolder, 'visual', 'VS2010', 'bin', '%s_%s' %
+            bin_dir = os.path.join(self._source_subfolder, 'visual', 'VS2017', 'bin', '%s_%s' %
                                    (arch, self.settings.build_type))
             self.copy("*.dll", dst='bin', src=bin_dir, keep_path=False)
             self.copy("*.lib", dst='lib', src=bin_dir, keep_path=False)
